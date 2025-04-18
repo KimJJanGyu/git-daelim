@@ -1,3 +1,6 @@
+import 'package:daelimflutter/presentation/common/widgets/white_box.dart';
+import 'package:daelimflutter/presentation/main/widgets/in_de_container.dart';
+import 'package:daelimflutter/presentation/main/widgets/height_box.dart';
 import 'package:flutter/material.dart';
 
 class MainScreen extends StatefulWidget {
@@ -8,39 +11,66 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  Widget _buildContainer() {
-    return Container(
-      height: 120,
-      margin: const EdgeInsets.only(top: 25),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-      ),
-    );
-  }
+  int _age = 30;
+  int _weight = 78;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF4F3FF),
+      backgroundColor: const Color(0xFFF4F3FF),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(left: 30, right: 30, bottom: 90),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
           child: Column(
-            spacing: 25,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 35),
-              Text('BMI CALCULATOR', style: TextStyle(fontSize: 20)),
+              const SizedBox(height: 35),
+              const Text(
+                'BMI CALCULATOR',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 25),
               Row(
-                spacing: 20,
                 children: [
-                  Expanded(child: _buildContainer()),
-                  Expanded(child: _buildContainer()),
+                  Expanded(
+                    child: InDeContainer(
+                      title: 'Age',
+                      value: _age.toDouble(),
+                      onMinus: () {
+                        if (_age > 0) {
+                          setState(() => _age--);
+                        }
+                      },
+                      onPlus: () => setState(() => _age++),
+                    ),
+                  ),
+                  const SizedBox(width: 20),
+                  Expanded(
+                    child: InDeContainer(
+                      title: 'Weight (KG)',
+                      value: _weight.toDouble(),
+                      onMinus: () {
+                        if (_weight > 0) {
+                          setState(() => _weight--);
+                        }
+                      },
+                      onPlus: () => setState(() => _weight++),
+                    ),
+                  ),
                 ],
               ),
-              _buildContainer(),
-              _buildContainer(),
-              ElevatedButton(onPressed: () {}, child: Text('Calculate BMI')),
+              const SizedBox(height: 25),
+              const HeightBox(),
+              const SizedBox(height: 25),
+              WhiteBox(
+                padding: const EdgeInsets.all(25),
+                child: const SizedBox.shrink(),
+              ),
+              const SizedBox(height: 25),
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text('Calculate BMI'),
+              ),
             ],
           ),
         ),
