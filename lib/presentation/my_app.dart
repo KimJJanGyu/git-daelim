@@ -1,6 +1,4 @@
 import 'package:daelimflutter/aoo_router/app_router.dart';
-import 'package:daelimflutter/presentation/home/example_screen.dart';
-import 'package:daelimflutter/presentation/start/start_screen.dart';
 import 'package:flutter/material.dart';
 
 class MyApp extends StatelessWidget {

@@ -1,7 +1,10 @@
+import 'package:daelimflutter/aoo_router/app_route.dart';
 import 'package:daelimflutter/presentation/common/widgets/white_box.dart';
+import 'package:daelimflutter/presentation/main/widgets/gender_box.dart';
 import 'package:daelimflutter/presentation/main/widgets/in_de_container.dart';
 import 'package:daelimflutter/presentation/main/widgets/height_box.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -11,8 +14,28 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _age = 30;
-  int _weight = 78;
+  int _age = 0;
+  int _weight = 0;
+  double _height = 100.0;
+  Gender _gender = Gender.male;
+
+  void _onCalculated() {
+    debugPrint('나이: $_age');
+    debugPrint('몸무게: $_weight');
+    debugPrint('키: $_height');
+    debugPrint('성별별: $_gender');
+
+    final chHeight = _height.round() / 100;
+
+    final bmi = _weight / (chHeight * chHeight);
+
+    debugPrint('BMI: $bmi');
+
+    context.pushNamed(
+      AppRoute.result.name,
+      queryParameters: {'bmi': bmi.toStringAsFixed(2)},
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,56 +43,64 @@ class _MainScreenState extends State<MainScreen> {
       backgroundColor: const Color(0xFFF4F3FF),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+          padding: const EdgeInsets.only(left: 30, right: 30, bottom: 90),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 25,
             children: [
-              const SizedBox(height: 35),
-              const Text(
-                'BMI CALCULATOR',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 25),
+              SizedBox(height: 35),
+              Text('BMI CALCULATOR', style: TextStyle(fontSize: 20)),
               Row(
+                spacing: 20,
                 children: [
                   Expanded(
                     child: InDeContainer(
                       title: 'Age',
-                      value: _age.toDouble(),
+                      value: _age,
                       onMinus: () {
-                        if (_age > 0) {
-                          setState(() => _age--);
-                        }
+                        if (_age == 0) return;
+                        setState(() => _age--);
                       },
                       onPlus: () => setState(() => _age++),
                     ),
                   ),
-                  const SizedBox(width: 20),
                   Expanded(
                     child: InDeContainer(
                       title: 'Weight (KG)',
-                      value: _weight.toDouble(),
+                      value: _weight,
                       onMinus: () {
-                        if (_weight > 0) {
-                          setState(() => _weight--);
-                        }
+                        if (_weight == 0) return;
+                        setState(() => _weight--);
                       },
                       onPlus: () => setState(() => _weight++),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 25),
-              const HeightBox(),
-              const SizedBox(height: 25),
+              HeightBox(
+                onChanged: (height) {
+                  _height = height;
+                  debugPrint('키:$height');
+                },
+              ),
               WhiteBox(
                 padding: const EdgeInsets.all(25),
                 child: const SizedBox.shrink(),
               ),
-              const SizedBox(height: 25),
-              ElevatedButton(
-                onPressed: () {},
-                child: const Text('Calculate BMI'),
+              GenderBox(
+                onChanged: (gender) {
+                  _gender = gender;
+                },
+              ),
+              //#endregion
+
+              //#region Calculate Button
+              SizedBox(
+                width: double.infinity,
+                height: 75,
+                child: ElevatedButton(
+                  onPressed: _onCalculated,
+                  child: Text('Calculate BMI'),
+                ),
               ),
             ],
           ),
